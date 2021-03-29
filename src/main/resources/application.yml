@@ -1,0 +1,16 @@
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+# PostgreSQL
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rentbike
+    username: rentbike
+    password: rentbike
+
+
+bike:
+  search:
+    default-distance-in-miles: 3
