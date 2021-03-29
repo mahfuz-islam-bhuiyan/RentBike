@@ -4,7 +4,7 @@ spring:
     hibernate:
       ddl-auto: update
 
-# PostgreSQL
+  # PostgreSQL
   datasource:
     url: jdbc:postgresql://${DB_URL_PORT_SCHEMA:localhost:5432/rentbike}
     username: ${DB_USERNAME:rentbike}
