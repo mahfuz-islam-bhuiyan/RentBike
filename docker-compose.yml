@@ -7,10 +7,12 @@ services:
       context: .
     ports:
       - "8080:8080"
-    container_name: app
+    container_name: rent-bike-app
     depends_on:
       - db
     environment:
+      - JAVA_OPTS=
+         -Dspring.profiles.active=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/rentbike
       - SPRING_DATASOURCE_USERNAME=rentbike
       - SPRING_DATASOURCE_PASSWORD=rentbike
