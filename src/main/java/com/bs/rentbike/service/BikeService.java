@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -122,8 +121,8 @@ public class BikeService {
             if (Objects.nonNull(locationUpdateReq.getStatus()))
                 bike.setStatus(locationUpdateReq.getStatus());
 
-             bike = createUpdate(bike);
-             isSuccessfullyUpdated = Objects.nonNull(bike);
+            bike = createUpdate(bike);
+            isSuccessfullyUpdated = Objects.nonNull(bike);
         }
 
         return isSuccessfullyUpdated;

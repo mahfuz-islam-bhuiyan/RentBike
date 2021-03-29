@@ -44,17 +44,17 @@ public interface BikeControllerApi {
     ResponseEntity<Bike> createBike(@RequestBody Bike bike);
 
     @ApiOperation(
-            value = "Update a bike's latitude and longitude",
+            value = "Update a bike's latitude, longitude and bike status. Updating bike status is optional.",
             nickname = "updateBikeLocation",
-            notes = "Update a bike's latitude and longitude",
+            notes = "Update a bike's latitude, longitude and bike status. Updating bike status is optional.",
             tags = {"bike",})
     @PutMapping(value = "/updateBikeLocation")
     ResponseEntity<Map<String, String>> updateBikeLocation(@RequestBody BikeLocationUpdateReq locationUpdateReq);
 
     @ApiOperation(
-            value = "Create dummy bikes",
+            value = "Create dummy bikes. Helpful for fresh DB.",
             nickname = "createDummyBikes",
-            notes = "Create dummy bikes",
+            notes = "Create dummy bikes. Helpful for fresh DB.",
             tags = {
                     "bike",
             })
@@ -62,9 +62,11 @@ public interface BikeControllerApi {
     ResponseEntity<Void> createDummyBikes();
 
     @ApiOperation(
-            value = "Get bikes by latitude, longitude and distance within miles",
+            value = "Get bikes by latitude, longitude and distance within miles." +
+                    "If no mile is specified than the default max mile will be used.",
             nickname = "getAllBikesByLatitudeLongitude",
-            notes = "Get bikes by latitude, longitude and distance within miles",
+            notes = "Get bikes by latitude, longitude and distance within miles" +
+                    "If no mile is specified than the default max mile will be used.",
             tags = {
                     "bike",
             })

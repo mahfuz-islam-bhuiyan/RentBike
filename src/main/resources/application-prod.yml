@@ -5,10 +5,10 @@ spring:
       ddl-auto: update
 
   # PostgreSQL
-  datasource:
-    url: jdbc:postgresql://${DB_URL_PORT_SCHEMA:localhost:5432/rentbike}
-    username: ${DB_USERNAME:rentbike}
-    password: ${DB_PASSWORD:rentbike}
+#  datasource:
+#    url: jdbc:postgresql://${DB_URL_PORT_SCHEMA:localhost:5432/rentbike}
+#    username: ${DB_USERNAME:rentbike}
+#    password: ${DB_PASSWORD:rentbike}
 
 
 bike:
