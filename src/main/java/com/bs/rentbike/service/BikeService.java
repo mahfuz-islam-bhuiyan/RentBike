@@ -2,9 +2,7 @@ package com.bs.rentbike.service;
 
 import com.bs.rentbike.mapper.BikeMapper;
 import com.bs.rentbike.model.Bike;
-import com.bs.rentbike.model.BikeActiveStatus;
-import com.bs.rentbike.model.BikeManufacturer;
-import com.bs.rentbike.model.BikeStatus;
+import com.bs.rentbike.model.request.BikeLocationUpdateReq;
 import com.bs.rentbike.repository.jpa.BikeRepository;
 import com.bs.rentbike.repository.schema.BikeEntity;
 import com.bs.rentbike.util.BikeUtil;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -35,25 +34,25 @@ public class BikeService {
     }
 
     public void createDummyBike() {
-        BikeUtil.getDummyBikeEntities().forEach(this::create);
+        BikeUtil.getDummyBikeEntities().forEach(this::createUpdate);
     }
 
-    public boolean create(Bike bike) {
-        var hasCreated = false;
+    public Bike createUpdate(Bike bike) {
+
         if (Objects.isNull(bike) || Objects.isNull(bike.getManufacturer())
                 || StringUtils.isEmpty(bike.getModel()) || StringUtils.isEmpty(bike.getLicenseNo())) {
             log.error("Couldn't create/update bike without manufacturer, model and license no");
-            return hasCreated;
+            return null;
         }
 
         try {
             bikeRepository.save(bikeMapper.domainToEntity().map(bike));
-            hasCreated = true;
         } catch (Exception e) {
-            log.error("Failed to save bike", e);
+            log.error("Failed to save or update bike", e);
+            bike = null;
         }
 
-        return hasCreated;
+        return bike;
     }
 
     public List<Bike> getAllBikes() {
@@ -81,5 +80,52 @@ public class BikeService {
         return bikeMapper.entityToDomain().map(bikeEntity.get());
     }
 
+    public List<Bike> getAllNearestBikesByLatitudeLongitude(Double fromLatitude, Double fromLongitude, Integer withinMiles) {
+        List<Bike> bikeList = new ArrayList<>();
 
+        if (Objects.isNull(fromLatitude) || Objects.isNull(fromLongitude)) return bikeList;
+
+        if (Objects.isNull(withinMiles) || withinMiles <= 0) withinMiles = DEFAULT_DISTANCE_IN_MILES;
+
+        try {
+            var bikeListOptional = bikeRepository.findAllAvailableByLatitudeLongitude(fromLatitude, fromLongitude, withinMiles);
+            if (bikeListOptional.isPresent()) {
+                bikeList = bikeListOptional.get()
+                        .stream()
+                        .map(bikeEntity -> bikeMapper.entityToDomain().map(bikeEntity))
+                        .collect(Collectors.toList());
+            }
+        } catch (Exception e) {
+            log.error("Error while finding nearest bikes for " + fromLatitude + ", " + fromLongitude, e);
+        }
+
+        return bikeList;
+    }
+
+
+    public boolean updateBikeLocation(BikeLocationUpdateReq locationUpdateReq) {
+        boolean isSuccessfullyUpdated = false;
+        if (Objects.isNull(locationUpdateReq.getBikeId())
+                || Objects.isNull(locationUpdateReq.getLatitude())
+                || Objects.isNull(locationUpdateReq.getLongitude())
+        ) {
+            log.error("Can not update bike location without bike id and location info");
+            return isSuccessfullyUpdated;
+        }
+
+        var bike = getBikeById(locationUpdateReq.getBikeId());
+        if (Objects.nonNull(bike)) {
+            bike.setLatitude(locationUpdateReq.getLatitude());
+            bike.setLongitude(locationUpdateReq.getLongitude());
+
+            /*Bike status update isn't mandatory*/
+            if (Objects.nonNull(locationUpdateReq.getStatus()))
+                bike.setStatus(locationUpdateReq.getStatus());
+
+             bike = createUpdate(bike);
+             isSuccessfullyUpdated = Objects.nonNull(bike);
+        }
+
+        return isSuccessfullyUpdated;
+    }
 }

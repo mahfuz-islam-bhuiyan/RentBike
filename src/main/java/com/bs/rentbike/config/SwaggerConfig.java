@@ -17,8 +17,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
                 .select()
-//                .apis(RequestHandlerSelectors.basePackage("com.example.RentBikeDemo"))
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.bs.rentbike"))
                 .paths(PathSelectors.any())
                 .build();
     }
