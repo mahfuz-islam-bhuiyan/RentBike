@@ -7,9 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -43,4 +45,5 @@ public class BikeEntity extends BaseEntity {
     @Column(name = "activeStatus")
     @Enumerated(EnumType.STRING)
     private BikeActiveStatus activeStatus;
+
 }
