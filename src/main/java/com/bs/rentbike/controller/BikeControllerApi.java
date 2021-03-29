@@ -68,7 +68,7 @@ public interface BikeControllerApi {
             tags = {
                     "bike",
             })
-    @GetMapping(value = "/nearestByLatLong")
+    @GetMapping(value = "/nearestBikesByLatLong")
     ResponseEntity<List<Bike>> getAllNearestBikesByLatitudeLongitude(
             @RequestParam(value = "fromLatitude", required = true) Double fromLatitude,
             @RequestParam(value = "fromLongitude", required = true) Double fromLongitude,

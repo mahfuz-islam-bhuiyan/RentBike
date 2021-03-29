@@ -39,7 +39,7 @@ public class BikeController implements BikeControllerApi {
     @Override
     public ResponseEntity<Map<String, String>> updateBikeLocation(BikeLocationUpdateReq locationUpdateReq) {
         var updated = bikeService.updateBikeLocation(locationUpdateReq);
-        var result  = Map.of("status", updated ? "location and status successfully updated" : "location and status update failed");
+        var result = Map.of("status", updated ? "location and status successfully updated" : "location and status update failed");
         return ResponseEntity.ok(result);
     }
 
